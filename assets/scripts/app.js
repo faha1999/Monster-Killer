@@ -3,12 +3,71 @@ const strongAttackValue = 17;
 const monsterAttackValue = 14;
 const healValue = 20;
 
-let chosenMaxLife = 100;
+const log_event_player_attack = 'player_attack';
+const log_event_player_strong_attack = 'player_strong_attack';
+const log_event_monster_attack = 'monster_attack';
+const log_event_player_heal = 'player_heal';
+const log_event_game_over = 'game_over';
+
+const enteredValue = prompt('Maximum life for a and the monster', '100');
+
+let chosenMaxLife = parseInt(enteredValue);
+let battleLog = [];
+
+if (isNaN(chosenMaxLife) || chosenMaxLife <= 0) {
+  chosenMaxLife = 100;
+}
+
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
 let hasBonusLife = true;
 
 adjustHealthBars(chosenMaxLife);
+
+function writeToLog(ev, val, monsterHealth, playerHealth) {
+  let logEntry;
+  if (ev === log_event_player_attack) {
+    logEntry = {
+      event: ev,
+      value: val,
+      target: 'monster',
+      finalMonsterHealth: monsterHealth,
+      finalPlayerHealth: playerHealth
+    };
+  } else if (ev === log_event_player_strong_attack) {
+    logEntry = {
+      event: ev,
+      value: val,
+      target: 'monster',
+      finalMonsterHealth: monsterHealth,
+      finalPlayerHealth: playerHealth
+    };
+  } else if (ev === log_event_monster_attack) {
+    logEntry = {
+      event: ev,
+      value: val,
+      target: 'player',
+      finalMonsterHealth: monsterHealth,
+      finalPlayerHealth: playerHealth
+    };
+  } else if (ev === log_event_player_heal) {
+    logEntry = {
+      event: ev,
+      value: val,
+      target: 'player',
+      finalMonsterHealth: monsterHealth,
+      finalPlayerHealth: playerHealth
+    };
+  } else if (ev === log_event_game_over) {
+    logEntry = {
+      event: ev,
+      value: val,
+      finalMonsterHealth: monsterHealth,
+      finalPlayerHealth: playerHealth
+    };
+  }
+  battleLog.push(logEntry);
+}
 
 function reset() {
   currentMonsterHealth = chosenMaxLife;
@@ -20,6 +79,12 @@ function endRound() {
   const initialPlayerHealth = currentPlayerHealth;
   const playerDamage = dealPlayerDamage(monsterAttackValue);
   currentPlayerHealth -= playerDamage;
+  writeToLog(
+    log_event_monster_attack,
+    playerDamage,
+    currentMonsterHealth,
+    currentPlayerHealth
+  );
 
   if (currentPlayerHealth <= 0 && hasBonusLife) {
     hasBonusLife = false;
@@ -31,10 +96,28 @@ function endRound() {
 
   if (currentMonsterHealth <= 0 && currentPlayerHealth > 0) {
     alert('You Won!');
+    writeToLog(
+      log_event_game_over,
+      'Player Won',
+      currentMonsterHealth,
+      currentPlayerHealth
+    );
   } else if (currentPlayerHealth <= 0 && currentMonsterHealth > 0) {
     alert('You lost!');
+    writeToLog(
+      log_event_game_over,
+      'Monster Won',
+      currentMonsterHealth,
+      currentPlayerHealth
+    );
   } else if (currentPlayerHealth <= 0 && currentMonsterHealth <= 0) {
     alert('You have a draw!');
+    writeToLog(
+      log_event_game_over,
+      'Match Draw',
+      currentMonsterHealth,
+      currentPlayerHealth
+    );
   }
 
   if (currentMonsterHealth <= 0 || currentPlayerHealth <= 0) {
@@ -44,14 +127,18 @@ function endRound() {
 
 function attackMonster(mode) {
   let maxDamage;
+  let logEvent;
   if (mode === 'attack') {
     maxDamage = attackValue;
+    logEvent = log_event_player_attack;
   } else if (mode === 'strongAttack') {
     maxDamage = strongAttackValue;
+    logEvent = log_event_player_strong_attack;
   }
 
   const damage = dealMonsterDamage(maxDamage);
   currentMonsterHealth -= damage;
+  writeToLog(logEvent, damage, currentMonsterHealth, currentPlayerHealth);
   endRound();
 }
 
@@ -73,9 +160,20 @@ function healPlayerHandler() {
   }
   increasePlayerHealth(heal_Value);
   currentPlayerHealth += heal_Value;
+  writeToLog(
+    log_event_player_heal,
+    heal_Value,
+    currentMonsterHealth,
+    currentPlayerHealth
+  );
   endRound();
+}
+
+function printLogHandler() {
+  console.log(battleLog);
 }
 
 attackBtn.addEventListener('click', attackHandler);
 strongAttackBtn.addEventListener('click', strongAttackHandler);
 healBtn.addEventListener('click', healPlayerHandler);
+logBtn.addEventListener('click', printLogHandler);
