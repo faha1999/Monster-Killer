@@ -145,6 +145,10 @@ button:active {
 }
 
 @media screen and (max-width: 600px) {
+  #animate-area {
+    padding-top: 7rem;
+    background-size: 13rem;
+  }
   #health-levels,
   #controls {
     width: 90% !important;
