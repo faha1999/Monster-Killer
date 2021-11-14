@@ -39,9 +39,6 @@ progress[value]::-moz-progress-bar {
 
 button {
   font: inherit;
-  background: #ff0062;
-  border: 1px solid #ff0062;
-  color: white;
   padding: 1rem 2rem;
   border-radius: 6px;
   cursor: pointer;
@@ -50,12 +47,59 @@ button {
 
 button:focus {
   outline: none;
+  transition: all 300ms;
 }
 
 button:hover,
 button:active {
+  transition: all 300ms;
+}
+
+#attack-btn {
+  color: white;
+  background: #ff0062;
+  border: 1px solid #ff0062;
+}
+
+#attack-btn:hover {
+  background: #c70202;
+  border-color: #c70202;
+  color: #ffffff;
+}
+
+#strong-attack-btn {
+  background: #c70202;
+  border: 1px solid #c70202;
+  color: white;
+  font-weight: 700;
+}
+
+#strong-attack-btn:hover {
+  background: #960101;
+  border: 1px solid #960101;
+}
+
+#heal-btn {
+  color: black;
+  background: #fac002;
+  border: 1px solid #fac002;
+}
+
+#heal-btn:hover {
+  background: #c79202;
+  border: 1px solid #c79202;
+  color: #ffffff;
+}
+
+#log-btn {
+  background: #ff0062;
+  border: 1px solid #ff0062;
+}
+
+#log-btn:hover {
   background: #a927f5;
   border-color: #a927f5;
+  color: #ffffff;
 }
 
 #health-levels,
@@ -83,4 +127,26 @@ button:active {
   border-radius: 10px;
   text-align: center;
   margin: 0 0.5rem;
+}
+
+@keyframes animatedBackground {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+#animate-area {
+  background-image: url(../image/monster.png);
+  background-position: 0px 0px;
+  background-repeat: repeat-x;
+  animation: animatedBackground 8s linear infinite alternate;
+}
+
+@media screen and (max-width: 600px) {
+  #health-levels,
+  #controls {
+    width: 90% !important;
+  }
 }

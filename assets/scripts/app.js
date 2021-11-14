@@ -9,7 +9,7 @@ const log_event_monster_attack = 'monster_attack';
 const log_event_player_heal = 'player_heal';
 const log_event_game_over = 'game_over';
 
-const enteredValue = prompt('Maximum life for a and the monster', '100');
+const enteredValue = prompt('Set Maximum life for you and the monster', '100');
 
 let chosenMaxLife = parseInt(enteredValue);
 let battleLog = [];
